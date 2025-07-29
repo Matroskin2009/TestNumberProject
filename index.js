@@ -67,38 +67,17 @@ document.addEventListener('DOMContentLoaded', function() {
         apiNumber = `${month}/${day}`;
     }
 
-    const urls = [
-        `http:
-        `https:
-        `https:
-    ];
+    const url = `http:\/\/numbersapi.com\/${number}\/${factType}?json`;
 
-    let lastError = null;
-
-    for (const url of urls) {
-        try {
-            const response = await fetch(url, {
-                headers: { 'Accept': 'application/json' }
-            });
-
-            if (!response.ok) continue;
-
-            const data = await response.json();
-            displayResult(factType, number, data);
-            loading.style.display = 'none';
-            return;
-
-        } catch (error) {
-            lastError = error;
-            console.warn(`Attempt failed for ${url}`, error);
-            continue;
-        }
+    try {
+    const response = await fetch(url);
+    const data = await response.json();
+    displayResult(factType, number, data);
+    } catch (error) {
+        errorMessage.textContent = 'Ошибка подключения';
     }
 
     loading.style.display = 'none';
-    errorMessage.textContent = 'Сервис временно недоступен. Попробуйте позже.';
-    console.error('All attempts failed:', lastError);
-
     if (factType === 'date' && number === '5/20') {
         displayResult(factType, number, {
             text: "May 20th is the day in 1570 when Abraham Ortelius published the first modern atlas."
